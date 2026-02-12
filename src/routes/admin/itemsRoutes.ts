@@ -1,5 +1,6 @@
 import { Router } from "express";
 import type { Repos } from "../../db/repos";
+import { upload, getUploadUrl } from "../../utils/fileUpload";
 
 export function makeAdminItemsRoutes(repos: Repos) {
   const router = Router();
@@ -104,6 +105,30 @@ export function makeAdminItemsRoutes(repos: Repos) {
         url: body.url,
         sortOrder: body.sortOrder ?? null,
         altText: body.altText ?? null,
+      });
+      res.status(201).json({ image });
+    } catch (e: any) {
+      res.status(400).json({ error: e?.message ?? "Bad Request" });
+    }
+  });
+
+  // POST /api/admin/items/:id/images/upload (file upload)
+  router.post("/:id/images/upload", upload.single("file"), async (req, res) => {
+    const itemId = Number(req.params.id);
+    if (!Number.isInteger(itemId) || itemId <= 0) return res.status(400).json({ error: "Invalid itemId" });
+
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+
+    try {
+      const url = getUploadUrl(req.file.filename);
+      const altText = (req.body?.altText as string) || null;
+      const sortOrder = req.body?.sortOrder ? Number(req.body.sortOrder) : null;
+
+      const image = await repos.itemsAdminRepo.addImage({
+        itemId,
+        url,
+        sortOrder: Number.isInteger(sortOrder) ? sortOrder : null,
+        altText,
       });
       res.status(201).json({ image });
     } catch (e: any) {
