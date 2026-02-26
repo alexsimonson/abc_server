@@ -3,6 +3,7 @@ import { makeItemsRepo } from "./itemsRepo";
 import { makeOrdersRepo } from "./ordersRepo";
 import { makeFulfillmentRepo } from "./fulfillmentRepo";
 import { makeItemsAdminRepo } from "./itemsAdminRepo";
+import { makeTicketsRepo } from "./ticketsRepo";
 
 export function makeRepos(knex: Knex) {
   return {
@@ -10,6 +11,7 @@ export function makeRepos(knex: Knex) {
     ordersRepo: makeOrdersRepo(knex),
     fulfillmentRepo: makeFulfillmentRepo(knex),
     itemsAdminRepo: makeItemsAdminRepo(knex),
+    ticketsRepo: makeTicketsRepo(knex),
   };
 }
 

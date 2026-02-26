@@ -14,11 +14,22 @@ const storage = multer.diskStorage({
     cb(null, uploadsDir);
   },
   filename: (req, file, cb) => {
-    // Create unique filename: timestamp-random-originalname
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    // Preserve original filename if it follows naming convention (name_00.ext)
+    // Otherwise create unique filename
     const ext = path.extname(file.originalname);
     const name = path.basename(file.originalname, ext);
-    cb(null, `${name}-${uniqueSuffix}${ext}`);
+    
+    // Check if filename follows convention: ends with _00, _01, etc.
+    const conventionMatch = name.match(/^(.+)_(\d{2,})$/);
+    
+    if (conventionMatch) {
+      // Preserve the naming convention
+      cb(null, file.originalname);
+    } else {
+      // Create unique filename for non-conventional names
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      cb(null, `${name}-${uniqueSuffix}${ext}`);
+    }
   },
 });
 

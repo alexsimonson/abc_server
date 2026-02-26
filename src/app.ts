@@ -8,8 +8,10 @@ import { makeAuthRouter } from "./routes/authRoutes";
 import { makeRequireAdmin } from "./middleware/auth";
 import { makeItemsRoutes } from "./routes/itemsRoutes";
 import { makeOrdersRoutes } from "./routes/ordersRoutes";
+import { makeTicketsRoutes } from "./routes/ticketsRoutes";
 import { makeAdminFulfillmentRoutes } from "./routes/admin/fulfillmentRoutes";
 import { makeAdminItemsRoutes } from "./routes/admin/itemsRoutes";
+import { makeAdminTicketsRoutes } from "./routes/admin/ticketsRoutes";
 import cors from "cors";
 import { getAllLocalIps } from "./utils/networkUtils";
 
@@ -136,11 +138,13 @@ export function makeApp() {
   app.use("/api/auth", makeAuthRouter(knex));
   app.use("/api/items", makeItemsRoutes(repos));
   app.use("/api/orders", makeOrdersRoutes(repos));
+  app.use("/api/tickets", makeTicketsRoutes(repos));
   
   // Admin routes - require authentication
   const requireAdmin = makeRequireAdmin(knex);
   app.use("/api/admin/fulfillment", requireAdmin, makeAdminFulfillmentRoutes(repos));
   app.use("/api/admin/items", requireAdmin, makeAdminItemsRoutes(repos));
+  app.use("/api/admin/tickets", requireAdmin, makeAdminTicketsRoutes(repos));
   
   return app;
 }

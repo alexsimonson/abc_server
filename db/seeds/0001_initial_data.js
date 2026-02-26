@@ -18,30 +18,38 @@ exports.seed = async function seed(knex) {
   await knex("items").del();
 
   // Insert items
-  const [hat, blanket, plush] = await knex("items")
+  const [doggyDog, elephant, joint, pigArtist] = await knex("items")
     .insert([
       {
-        title: "Crocheted Beanie",
-        description: "Handmade crocheted beanie. Soft, warm, and cozy.",
-        price_cents: 2500,
-        quantity_available: 3,
-        make_time_minutes: 90,
-        is_active: true,
-      },
-      {
-        title: "Baby Blanket",
-        description: "Crocheted baby blanket made with hypoallergenic yarn.",
-        price_cents: 6000,
-        quantity_available: 1,
-        make_time_minutes: 480,
-        is_active: true,
-      },
-      {
-        title: "Plush Octopus",
-        description: "Cute crocheted octopus plushie.",
+        title: "Doggy Dog",
+        description: "Adorable crocheted dog plushie.",
         price_cents: 3500,
-        quantity_available: 0, // forces fulfillment_units into NEEDS_CREATED later
+        quantity_available: 2,
         make_time_minutes: 180,
+        is_active: true,
+      },
+      {
+        title: "Elephant",
+        description: "Cute crocheted elephant plushie.",
+        price_cents: 4000,
+        quantity_available: 1,
+        make_time_minutes: 200,
+        is_active: true,
+      },
+      {
+        title: "Joint",
+        description: "Handmade crocheted joint decoration.",
+        price_cents: 1500,
+        quantity_available: 5,
+        make_time_minutes: 60,
+        is_active: true,
+      },
+      {
+        title: "Pig Artist",
+        description: "Artistic crocheted pig plushie with accessories.",
+        price_cents: 4500,
+        quantity_available: 1,
+        make_time_minutes: 240,
         is_active: true,
       },
     ])
@@ -49,34 +57,72 @@ exports.seed = async function seed(knex) {
 
   // Insert item images
   await knex("item_images").insert([
-    // Beanie
+    // Doggy Dog
     {
-      item_id: hat.id,
-      url: "https://placehold.co/600x600?text=Beanie+Front",
-      sort_order: 1,
-      alt_text: "Crocheted beanie front view",
+      item_id: doggyDog.id,
+      url: "/uploads/doggy_dog_00.jpg",
+      sort_order: 0,
+      alt_text: "Crocheted dog plushie",
     },
     {
-      item_id: hat.id,
-      url: "https://placehold.co/600x600?text=Beanie+Side",
+      item_id: doggyDog.id,
+      url: "/uploads/doggy_dog_01.jpg",
+      sort_order: 1,
+      alt_text: "Crocheted dog plushie - view 2",
+    },
+    {
+      item_id: doggyDog.id,
+      url: "/uploads/doggy_dog_02.jpg",
       sort_order: 2,
-      alt_text: "Crocheted beanie side view",
+      alt_text: "Crocheted dog plushie - view 3",
     },
 
-    // Blanket
+    // Elephant
     {
-      item_id: blanket.id,
-      url: "https://placehold.co/600x600?text=Blanket",
-      sort_order: 1,
-      alt_text: "Crocheted baby blanket",
+      item_id: elephant.id,
+      url: "/uploads/elephant_00.jpg",
+      sort_order: 0,
+      alt_text: "Crocheted elephant plushie",
     },
 
-    // Plush
+    // Joint
     {
-      item_id: plush.id,
-      url: "https://placehold.co/600x600?text=Octopus",
+      item_id: joint.id,
+      url: "/uploads/joint_00.jpg",
+      sort_order: 0,
+      alt_text: "Crocheted joint decoration",
+    },
+
+    // Pig Artist
+    {
+      item_id: pigArtist.id,
+      url: "/uploads/pig_artist_00.jpg",
+      sort_order: 0,
+      alt_text: "Crocheted pig artist plushie",
+    },
+    {
+      item_id: pigArtist.id,
+      url: "/uploads/pig_artist_01.jpg",
       sort_order: 1,
-      alt_text: "Crocheted octopus plush",
+      alt_text: "Crocheted pig artist - view 2",
+    },
+    {
+      item_id: pigArtist.id,
+      url: "/uploads/pig_artist_02.jpg",
+      sort_order: 2,
+      alt_text: "Crocheted pig artist - view 3",
+    },
+    {
+      item_id: pigArtist.id,
+      url: "/uploads/pig_artist_03.jpg",
+      sort_order: 3,
+      alt_text: "Crocheted pig artist - view 4",
+    },
+    {
+      item_id: pigArtist.id,
+      url: "/uploads/pig_artist_04.jpg",
+      sort_order: 4,
+      alt_text: "Crocheted pig artist - view 5",
     },
   ]);
 };
