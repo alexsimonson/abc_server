@@ -1,8 +1,11 @@
 import "dotenv/config";
 import express from "express";
+import session from "express-session";
 import path from "path";
 import { knex } from "./db/knex";
 import { makeRepos } from "./db/repos";
+import { makeAuthRouter } from "./routes/authRoutes";
+import { makeRequireAdmin } from "./middleware/auth";
 import { makeItemsRoutes } from "./routes/itemsRoutes";
 import { makeOrdersRoutes } from "./routes/ordersRoutes";
 import { makeAdminFulfillmentRoutes } from "./routes/admin/fulfillmentRoutes";
@@ -90,6 +93,20 @@ export function makeApp() {
   app.use(cors(getCorsOptions()));
   app.use(express.json());
   
+  // Session middleware for authentication
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET ?? "dev-secret-change-me",
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: false, // set true behind https
+      },
+    })
+  );
+  
   // Serve static files from public directory
   app.use(express.static(path.join(process.cwd(), "public")));
 
@@ -116,10 +133,14 @@ export function makeApp() {
     });
   });
 
+  app.use("/api/auth", makeAuthRouter(knex));
   app.use("/api/items", makeItemsRoutes(repos));
   app.use("/api/orders", makeOrdersRoutes(repos));
-  app.use("/api/admin/fulfillment", makeAdminFulfillmentRoutes(repos));
-  app.use("/api/admin/items", makeAdminItemsRoutes(repos));
+  
+  // Admin routes - require authentication
+  const requireAdmin = makeRequireAdmin(knex);
+  app.use("/api/admin/fulfillment", requireAdmin, makeAdminFulfillmentRoutes(repos));
+  app.use("/api/admin/items", requireAdmin, makeAdminItemsRoutes(repos));
   
   return app;
 }
