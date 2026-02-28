@@ -9,6 +9,7 @@ import { makeRequireAdmin } from "./middleware/auth";
 import { makeItemsRoutes } from "./routes/itemsRoutes";
 import { makeOrdersRoutes } from "./routes/ordersRoutes";
 import { makeTicketsRoutes } from "./routes/ticketsRoutes";
+import { makePaymentRoutes } from "./routes/paymentRoutes";
 import { makeAdminFulfillmentRoutes } from "./routes/admin/fulfillmentRoutes";
 import { makeAdminItemsRoutes } from "./routes/admin/itemsRoutes";
 import { makeAdminTicketsRoutes } from "./routes/admin/ticketsRoutes";
@@ -138,6 +139,7 @@ export function makeApp() {
   app.use("/api/auth", makeAuthRouter(knex));
   app.use("/api/items", makeItemsRoutes(repos));
   app.use("/api/orders", makeOrdersRoutes(repos));
+  app.use("/api/payment", makePaymentRoutes(repos));
   app.use("/api/tickets", makeTicketsRoutes(repos));
   
   // Admin routes - require authentication
